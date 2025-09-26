@@ -1,65 +1,75 @@
+# Event-Driven Data Processing Architecture (AWS Lambda + S3 + SQS + DynamoDB + IAM)
 
-# Welcome to your CDK Python project!
+This project is a serverless event-driven data processing system built with AWS services and Python.
 
-You should explore the contents of this project. It demonstrates a CDK app with an instance of a stack (`lambda_sqs_stack_stack`)
-which contains an Amazon SQS queue that is subscribed to an Amazon SNS topic.
+---
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+## **Overview**
 
-This project is set up like a standard Python project.  The initialization process also creates
-a virtualenv within this project, stored under the .venv directory.  To create the virtualenv
-it assumes that there is a `python3` executable in your path with access to the `venv` package.
-If for any reason the automatic creation of the virtualenv fails, you can create the virtualenv
-manually once the init process completes.
+* **S3 Bucket**: Stores uploaded CSV files and triggers Lambda on new objects.
+* **SQS Queue**: Receives messages and triggers Lambda.
+* **Lambda Function**: Processes events from S3 and SQS, validates and cleanses data, logs warnings, and stores processed data in DynamoDB.
+* **DynamoDB Table**: Stores cleaned and validated user data with `user_id` as the primary key.
+* **CloudWatch Logs**: Captures warnings, errors, and processing logs.
+* **IAM Roles**: Lambda has permissions for S3, DynamoDB, and SQS access.
 
-To manually create a virtualenv on MacOS and Linux:
+---
 
+## **Tech Stack**
+
+* Python 3.10
+* AWS CDK v2 (`aws-cdk-lib`)
+* AWS Lambda
+* S3
+* SQS
+* DynamoDB
+* CloudWatch
+* Pandas (via Lambda Layer)
+
+---
+
+## **How It Works**
+
+1. CSV file uploaded to S3 → triggers Lambda.
+2. Message sent to SQS → triggers Lambda.
+3. Lambda:
+
+   * Reads CSV or SQS message.
+   * Validates data (emails, age, missing fields).
+   * Cleanses data (normalize email, handle missing values).
+   * Logs invalid data as warnings.
+   * Stores valid data in DynamoDB.
+
+---
+
+## **Testing**
+
+* CDK stack tests written with `aws-cdk-lib.assertions`.
+* Tests validate creation of Lambda, SQS, S3, and DynamoDB resources.
+* **Note:** There’s a complex dependency conflict with PyTest and CDK packages, so tests may fail unless dependencies are carefully managed.
+
+---
+
+## **Deployment**
+
+1. Clone the repo.
+2. Install dependencies in a virtual environment.
+3. Ensure you have configured you AWS access credentials.
+4. Deploy stack with:
+
+```bash
+cdk deploy
 ```
-$ python -m venv .venv
-```
 
-After the init process completes and the virtualenv is created, you can use the following
-step to activate your virtualenv.
+---
 
-```
-$ source .venv/bin/activate
-```
+## Author
 
-If you are a Windows platform, you would activate the virtualenv like this:
+Ahmad Al Sharbaji
 
-```
-% .venv\Scripts\activate.bat
-```
+I work on data and backend systems.
 
-Once the virtualenv is activated, you can install the required dependencies.
+I hope this repo helps. If you ran the tests and PyTest worked on your machine, I’d appreciate a brief note about your setup and any issues you hit.
 
-```
-$ pip install -r requirements.txt
-```
+Thank you ^_^
 
-At this point you can now synthesize the CloudFormation template for this code.
-
-```
-$ cdk synth
-```
-
-You can now begin exploring the source code, contained in the hello directory.
-There is also a very trivial test included that can be run like this:
-
-```
-$ pytest
-```
-
-To add additional dependencies, for example other CDK libraries, just add to
-your requirements.txt file and rerun the `pip install -r requirements.txt`
-command.
-
-## Useful commands
-
- * `cdk ls`          list all stacks in the app
- * `cdk synth`       emits the synthesized CloudFormation template
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk docs`        open CDK documentation
-
-Enjoy!
