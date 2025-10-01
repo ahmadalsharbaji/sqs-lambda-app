@@ -1,6 +1,6 @@
-# Event-Driven Data Processing Architecture (AWS Lambda + S3 + SQS + DynamoDB + IAM)
+# Event-Driven Data Processing Architecture
 
-<img width="1364" height="990" alt="LambdaSQSStack Diagram drawio" src="https://github.com/user-attachments/assets/5a7cfe7a-4462-4739-8a6a-a07fb38117b9" />
+<img width="1673" height="1120" alt="LambdaSQSStack Diagram drawio" src="https://github.com/user-attachments/assets/73978da7-e4ec-4dab-9b54-23ed04b9402a" />
 
 
 This project is a serverless event-driven data processing system built with AWS services and Python.
